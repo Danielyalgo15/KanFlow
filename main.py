@@ -1,10 +1,10 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QLabel
+from PyQt5.QtWidgets import QApplication
+from views.main_window import MainWindow
 
 app = QApplication(sys.argv)
 
-ventana = QLabel("¡Bienvenido a KanFlow!")
-ventana.resize(300, 100)
+ventana = MainWindow()
 ventana.show()
 
 sys.exit(app.exec_())

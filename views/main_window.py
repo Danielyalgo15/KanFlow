@@ -5,25 +5,24 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
     QGroupBox,
-    QPushButton
+    QPushButton,
+    QMessageBox
 )
-
+from views.nueva_tarjeta import NuevaTarjeta
+from views.tarjeta_widget import TarjetaWidget
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle("KanFlow")
         self.resize(1000, 600)
-
         self.central = QWidget()
         self.setCentralWidget(self.central)
-
         self.layout_principal = QVBoxLayout()
         self.central.setLayout(self.layout_principal)
-
+        
         self.titulo_tablero = QLabel("Tablero: Universidad")
         self.layout_principal.addWidget(self.titulo_tablero)
-
         self.layout_contenido = QHBoxLayout()
         self.layout_principal.addLayout(self.layout_contenido)
 
@@ -41,6 +40,10 @@ class MainWindow(QMainWindow):
                 font-weight: bold;
             }
         """)
+        # Botón Nueva Tarjeta
+        self.btn_nueva = QPushButton("Nueva Tarjeta")
+        self.layout_panel.addWidget(self.btn_nueva)
+        self.btn_nueva.clicked.connect(self.nueva_tarjeta)
 
         self.panel_derecho = QGroupBox("Tablero")
         self.layout_tablero = QHBoxLayout()
@@ -66,6 +69,9 @@ class MainWindow(QMainWindow):
         self.col_pendiente.setLayout(self.layout_pendiente)
         self.col_proceso.setLayout(self.layout_proceso)
         self.col_terminado.setLayout(self.layout_terminado)
+        self.layout_pendiente.addStretch()
+        self.layout_proceso.addStretch()
+        self.layout_terminado.addStretch()
 
         self.layout_tablero.addWidget(self.col_pendiente)
         self.layout_tablero.addWidget(self.col_proceso)
@@ -73,3 +79,18 @@ class MainWindow(QMainWindow):
         self.layout_tablero.setStretch(0, 1)
         self.layout_tablero.setStretch(1, 1)
         self.layout_tablero.setStretch(2, 1)
+
+    def nueva_tarjeta(self):
+
+        ventana = NuevaTarjeta()
+
+        if ventana.exec_():
+
+            tarjeta = ventana.tarjeta
+
+            widget = TarjetaWidget(tarjeta)
+
+            self.layout_pendiente.insertWidget(
+                self.layout_pendiente.count() - 1,
+                widget
+            )

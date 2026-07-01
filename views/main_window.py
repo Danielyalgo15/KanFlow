@@ -54,6 +54,10 @@ class MainWindow(QMainWindow):
         self.layout_panel.addWidget(self.btn_nueva)
         self.btn_nueva.clicked.connect(self.nueva_tarjeta)
 
+        self.btn_metricas = QPushButton("Ver métricas")
+        self.btn_metricas.clicked.connect(self.ver_metricas)
+        self.layout_panel.addWidget(self.btn_metricas)
+
         self.layout_panel.addWidget(QLabel("Filtrar por estado"))
         self.combo_filtro = QComboBox()
         self.combo_filtro.addItems([
@@ -197,3 +201,57 @@ class MainWindow(QMainWindow):
             if widget.tarjeta.estado == estado:
                 cantidad += 1
         return cantidad
+    
+    def ver_metricas(self):
+        total = len(self.tarjetas)
+        pendientes = 0
+        proceso = 0
+        terminadas = 0
+        ciclo_total = 0
+        lead_total = 0
+        tarjetas_ciclo = 0
+        tarjetas_lead = 0
+
+        for widget in self.tarjetas:
+
+            if widget.tarjeta.estado == "Pendiente":
+                pendientes += 1
+
+            elif widget.tarjeta.estado == "En Proceso":
+                proceso += 1
+
+            elif widget.tarjeta.estado == "Terminado":
+                terminadas += 1
+
+            ciclo = widget.tarjeta.tiempo_ciclo()
+            if ciclo:
+                ciclo_total += ciclo.total_seconds()
+                tarjetas_ciclo += 1
+
+            lead = widget.tarjeta.lead_time()
+            if lead:
+                lead_total += lead.total_seconds()
+                tarjetas_lead += 1
+
+        if tarjetas_ciclo > 0:
+            promedio_ciclo = ciclo_total / tarjetas_ciclo
+        else:
+            promedio_ciclo = 0
+
+        if tarjetas_lead > 0:
+            promedio_lead = lead_total / tarjetas_lead
+        else:
+            promedio_lead = 0
+
+        QMessageBox.information(
+            self,
+            "Métricas",
+            f"""Total de tarjetas: {total}
+
+    Pendientes: {pendientes}
+    En Proceso: {proceso}
+    Terminadas: {terminadas}
+
+    Tiempo de ciclo promedio: {promedio_ciclo:.2f} segundos
+    Lead Time promedio: {promedio_lead:.2f} segundos"""
+        )

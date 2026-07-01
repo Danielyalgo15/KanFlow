@@ -35,6 +35,12 @@ class DetalleTarjeta(QDialog):
         self.lbl_fecha = QLabel(f"Creada: {tarjeta.fecha_creacion}")
         layout.addWidget(self.lbl_fecha)
 
+        self.lbl_ciclo = QLabel("Tiempo de ciclo: No disponible")
+        layout.addWidget(self.lbl_ciclo)
+
+        self.lbl_lead = QLabel("Lead Time: No disponible")
+        layout.addWidget(self.lbl_lead)
+
         self.lbl_historial = QLabel(
             "Historial:\n" + "\n".join(self.tarjeta.historial)
         )
@@ -111,7 +117,20 @@ class DetalleTarjeta(QDialog):
             self.btn_mover.setEnabled(False)
         else:
             self.btn_mover.setEnabled(True)
-    
+
+        tiempo = self.tarjeta.tiempo_ciclo()
+        if tiempo:
+            self.lbl_ciclo.setText(f"Tiempo de ciclo: {tiempo}")
+        else:
+            self.lbl_ciclo.setText("Tiempo de ciclo: No disponible")
+        
+        lead = self.tarjeta.lead_time()
+
+        if lead:
+            self.lbl_lead.setText(f"Lead Time: {lead}")
+        else:
+            self.lbl_lead.setText("Lead Time: No disponible")
+            
     def eliminar_tarjeta(self):
         self.widget.main_window.tarjetas.remove(self.widget)
         self.widget.setParent(None)

@@ -30,4 +30,15 @@ class Tarjeta:
             self.historial.append(
                 f"Terminado - {self.fecha_finalizacion.strftime('%d/%m/%Y %H:%M:%S')}"
             )
-    
+    def tiempo_ciclo(self):
+
+        if self.fecha_inicio and self.fecha_finalizacion:
+            return self.fecha_finalizacion - self.fecha_inicio
+
+        return None
+    def lead_time(self):
+
+        if self.fecha_finalizacion:
+            return self.fecha_finalizacion - self.fecha_creacion
+
+        return None

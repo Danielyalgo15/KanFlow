@@ -4,10 +4,11 @@ from views.detalle_tarjeta import DetalleTarjeta
 
 
 class TarjetaWidget(QFrame):
-    def __init__(self, tarjeta):
+    def __init__(self, tarjeta, main_window):
         super().__init__()
 
         self.tarjeta = tarjeta
+        self.main_window = main_window
 
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.setFrameShape(QFrame.Box)
@@ -28,7 +29,7 @@ class TarjetaWidget(QFrame):
 
     def mousePressEvent(self, event):
 
-        ventana = DetalleTarjeta(self.tarjeta)
+        ventana = DetalleTarjeta(self.tarjeta, self)
 
         if ventana.exec_():
             self.actualizar()

@@ -8,10 +8,11 @@ from PyQt5.QtWidgets import (
 
 from views.nueva_tarjeta import NuevaTarjeta
 class DetalleTarjeta(QDialog):
-    def __init__(self, tarjeta):
+    def __init__(self, tarjeta, widget):
         super().__init__()
 
         self.tarjeta = tarjeta
+        self.widget = widget
 
         self.setWindowTitle("Detalle de la Tarjeta")
         self.resize(400, 300)
@@ -33,6 +34,11 @@ class DetalleTarjeta(QDialog):
         self.lbl_fecha = QLabel(f"Creada: {tarjeta.fecha_creacion}")
         layout.addWidget(self.lbl_fecha)
 
+        self.lbl_historial = QLabel(
+            "Historial:\n" + "\n".join(self.tarjeta.historial)
+        )
+        layout.addWidget(self.lbl_historial)
+
         layout_botones = QHBoxLayout()
 
         self.btn_editar = QPushButton("Editar")
@@ -40,6 +46,7 @@ class DetalleTarjeta(QDialog):
         self.btn_eliminar = QPushButton("Eliminar")
 
         self.btn_editar.clicked.connect(self.editar_tarjeta)
+        self.btn_mover.clicked.connect(self.mover_tarjeta)
 
         layout_botones.addWidget(self.btn_editar)
         layout_botones.addWidget(self.btn_mover)
@@ -53,6 +60,7 @@ class DetalleTarjeta(QDialog):
         layout.addWidget(self.btn_cerrar)
 
         self.setLayout(layout)
+        self.actualizar_datos()
         
     def editar_tarjeta(self):
         ventana = NuevaTarjeta(self.tarjeta)
@@ -61,6 +69,11 @@ class DetalleTarjeta(QDialog):
             self.actualizar_datos()
             self.accept()
 
+    def mover_tarjeta(self):
+        self.tarjeta.mover()
+        self.widget.actualizar()
+        self.widget.main_window.mover_widget(self.widget)
+        self.actualizar_datos()
 
     def actualizar_datos(self):
         self.lbl_titulo.setText(f"Título: {self.tarjeta.titulo}")
@@ -68,3 +81,10 @@ class DetalleTarjeta(QDialog):
         self.lbl_prioridad.setText(f"Prioridad: {self.tarjeta.prioridad}")
         self.lbl_estado.setText(f"Estado: {self.tarjeta.estado}")
         self.lbl_fecha.setText(f"Creada: {self.tarjeta.fecha_creacion}")
+        self.lbl_historial.setText(
+            "Historial:\n" + "\n".join(self.tarjeta.historial)
+        )
+        if self.tarjeta.estado == "Terminado":
+            self.btn_mover.setEnabled(False)
+        else:
+            self.btn_mover.setEnabled(True)

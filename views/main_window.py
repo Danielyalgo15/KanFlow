@@ -118,7 +118,14 @@ class MainWindow(QMainWindow):
         self.layout_tablero.setStretch(2, 1)
 
     def nueva_tarjeta(self):
-
+        if self.contar_tarjetas("Pendiente") >= self.limite_wip["Pendiente"]:
+            QMessageBox.warning(
+                self,
+                "Límite WIP",
+                "La columna 'Pendiente' alcanzó su límite."
+            )
+            return
+        
         ventana = NuevaTarjeta()
 
         if ventana.exec_():

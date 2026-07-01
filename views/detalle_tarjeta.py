@@ -3,7 +3,8 @@ from PyQt5.QtWidgets import (
     QLabel,
     QPushButton,
     QVBoxLayout,
-    QHBoxLayout
+    QHBoxLayout,
+    QMessageBox
 )
 
 from views.nueva_tarjeta import NuevaTarjeta
@@ -70,6 +71,27 @@ class DetalleTarjeta(QDialog):
             self.accept()
 
     def mover_tarjeta(self):
+
+        if self.tarjeta.estado == "Pendiente":
+            siguiente_estado = "En Proceso"
+
+        elif self.tarjeta.estado == "En Proceso":
+            siguiente_estado = "Terminado"
+
+        else:
+            return
+
+        cantidad = self.widget.main_window.contar_tarjetas(siguiente_estado)
+        limite = self.widget.main_window.limite_wip[siguiente_estado]
+
+        if cantidad >= limite:
+            QMessageBox.warning(
+                self,
+                "Límite WIP",
+                f"La columna '{siguiente_estado}' alcanzó su límite."
+            )
+            return
+
         self.tarjeta.mover()
         self.widget.actualizar()
         self.widget.main_window.mover_widget(self.widget)

@@ -48,6 +48,7 @@ class DetalleTarjeta(QDialog):
 
         self.btn_editar.clicked.connect(self.editar_tarjeta)
         self.btn_mover.clicked.connect(self.mover_tarjeta)
+        self.btn_eliminar.clicked.connect(self.eliminar_tarjeta)
 
         layout_botones.addWidget(self.btn_editar)
         layout_botones.addWidget(self.btn_mover)
@@ -110,3 +111,8 @@ class DetalleTarjeta(QDialog):
             self.btn_mover.setEnabled(False)
         else:
             self.btn_mover.setEnabled(True)
+    
+    def eliminar_tarjeta(self):
+        self.widget.main_window.tarjetas.remove(self.widget)
+        self.widget.setParent(None)
+        self.accept()

@@ -30,3 +30,4 @@ class Tarjeta:
             self.historial.append(
                 f"Terminado - {self.fecha_finalizacion.strftime('%d/%m/%Y %H:%M:%S')}"
             )
+    
